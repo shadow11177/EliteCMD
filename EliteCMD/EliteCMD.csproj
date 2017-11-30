@@ -64,6 +64,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="cargo.cs" />
     <Compile Include="DynamicJson.cs" />
     <Compile Include="EliteAPI.cs" />
     <Compile Include="MainWindow.xaml.cs">

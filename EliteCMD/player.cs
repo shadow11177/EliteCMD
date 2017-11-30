@@ -39,7 +39,7 @@ namespace EliteCMD
                 }
                 station = value;
             }
-        }
+        } //With changed Flag
 
         public string StarSystem
         {
@@ -56,7 +56,7 @@ namespace EliteCMD
                 }
                 starSystem = value;
             }
-        }
+        } //With changed Flag
 
         public string Docked
         {
@@ -73,7 +73,7 @@ namespace EliteCMD
                 }
                 docked = value;
             }
-        }
+        } //With changed Flag
 
         public string LoadFSD
         {
@@ -90,7 +90,7 @@ namespace EliteCMD
                 }
                 loadFSD = value;
             }
-        }
+        } //With changed Flag
 
         public string Ship
         {
@@ -109,7 +109,7 @@ namespace EliteCMD
                 }
                 ship = value;
             }
-        }
+        } //With changed Flag and Dictionary
 
         public bool Changed
         {
@@ -124,7 +124,7 @@ namespace EliteCMD
             {
                 changed = value;
             }
-        }
+        } //With changed Flag
 
         public string Track
         {
@@ -141,7 +141,7 @@ namespace EliteCMD
                 }
                 track = value;
             }
-        }
+        } //With changed Flag
 
         public int CargoSpace
         {
@@ -158,7 +158,7 @@ namespace EliteCMD
                 }
                 cargoSpace = value;
             }
-        }
+        } //With changed Flag
 
         public int Cargo
         {
@@ -175,7 +175,7 @@ namespace EliteCMD
                 }
                 cargo = value;
             }
-        }
+        } //With changed Flag
 
         public int PassengerCabbin
         {
@@ -192,7 +192,7 @@ namespace EliteCMD
                 }
                 passengerCabbin = value;
             }
-        }
+        } //With changed Flag
 
         public int Passenger
         {
@@ -209,7 +209,7 @@ namespace EliteCMD
                 }
                 passenger = value;
             }
-        }
+        } //With changed Flag
 
         public string GameMode
         {
@@ -226,7 +226,7 @@ namespace EliteCMD
                 }
                 gameMode = value;
             }
-        }
+        } //With changed Flag
 
         public string StarClass
         {
@@ -243,11 +243,11 @@ namespace EliteCMD
                 }
                 starClass = value;
             }
-        }
+        } //With changed Flag
 
         public player()
         {
-            //Ship name correction
+            //Ship name dictionary
             Ships.Add("SideWinder",               "SideWinder"    );
             Ships.Add("Eagle",                    "Eagle"         );
             Ships.Add("Hauler",                   "Hauler"        );

@@ -177,6 +177,7 @@ namespace EliteCMD
             else if (json["event"] == "Cargo")                                      //Cargo
             {
                 //{ "timestamp":"2017-11-29T16:24:40Z", "event":"Cargo", "Inventory":[  ] }
+                //{ "timestamp":"2017-10-12T11:27:06Z", "event":"Cargo", "Inventory":[ { "Name":"bromellite", "Count":4 } ] }
                 int cargo = 0;
                 foreach (dynamic mod in json.Inventory)
                 {
@@ -191,17 +192,41 @@ namespace EliteCMD
             }
             else if (json["event"] == "MarketBuy")                                  //Market Buy
             {
+                //{ "timestamp":"2017-10-09T09:36:33Z", "event":"MarketBuy", "Type":"lithium", "Count":77, "BuyPrice":1201, "TotalCost":92477 }
                 pl.Cargo += json["Count"];
             }
             else if (json["event"] == "MissionAccepted")                            //Mission Accepted
             {
+                //{ "timestamp":"2017-11-16T13:39:30Z", "event":"MissionAccepted", "Faction":"Upsilon Aquarii Services", "Name":"Mission_Altruism", "LocalisedName":"54 Einheiten spenden: Halbleiter", "Commodity":"$Semiconductors_Name;", "Commodity_Localised":"Halbleiter", "Count":54, "DestinationSystem":"Upsilon Aquarii", "DestinationStation":"Allen Hub", "Expiry":"2017-11-18T04:09:59Z", "Influence":"Low", "Reputation":"High", "MissionID":246921122 }
+                //{ "timestamp":"2017-11-23T11:49:51Z", "event":"MissionAccepted", "Faction":"Workers of HIP 67882 Democrats", "Name":"Chain_HelpFinishTheOrder", "LocalisedName":"2 Einheiten liefern: Silber", "Commodity":"$Silver_Name;", "Commodity_Localised":"Silber", "Count":2, "DestinationSystem":"Ochosi", "DestinationStation":"Sheckley Holdings", "Expiry":"2017-11-24T11:49:14Z", "Influence":"Low", "Reputation":"Low", "Reward":289475, "MissionID":250996387 }
+                //{ "timestamp":"2017-11-23T11:58:36Z", "event":"MissionAccepted", "Faction":"Chakpa Purple Travel Exchange", "Name":"Mission_AltruismCredits_CivilUnrest", "LocalisedName":"1.000.000 CR Beschaffen, um zivile Unruhen einzudämmen", "Expiry":"2017-11-23T15:39:24Z", "Influence":"Low", "Reputation":"High", "MissionID":250998729 }
+                //{ "timestamp":"2017-11-17T10:35:23Z", "event":"MissionAccepted", "Faction":"Upsilon Aquarii Services", "Name":"Mission_AltruismCredits", "LocalisedName":"1.000.000 CR für die Sache spenden", "Expiry":"2017-11-17T13:39:02Z", "Influence":"Low", "Reputation":"High", "MissionID":247404125 }
+                //{ "timestamp":"2017-11-23T11:52:05Z", "event":"MissionAccepted", "Faction":"Chakpa Purple Travel Exchange", "Name":"Mission_Courier_RankFed", "LocalisedName":"Kurierauftrag der föderalen Flotte verfügbar", "DestinationSystem":"Ochosi", "DestinationStation":"Perry's Folly", "Expiry":"2017-11-24T11:51:44Z", "Influence":"Low", "Reputation":"Med", "Reward":84736, "MissionID":250997004 }
+                //{ "timestamp":"2017-11-16T13:41:18Z", "event":"MissionAccepted", "Faction":"Upsilon Aquarii PLC", "Name":"Mission_Massacre_Conflict_War", "LocalisedName":"Schiffe der Upsilon Aquarii Nationalists-Fraktion massakrieren", "TargetFaction":"Upsilon Aquarii Nationalists", "KillCount":4, "DestinationSystem":"Upsilon Aquarii", "DestinationStation":"Allen Hub", "Expiry":"2017-11-17T09:47:13Z", "Influence":"High", "Reputation":"Med", "Reward":133226, "MissionID":246921671 }
+                //{ "timestamp":"2017-11-07T11:18:50Z", "event":"MissionAccepted", "Faction":"Upsilon Aquarii Free", "Name":"Mission_PassengerBulk_REFUGEE_LEAVING", "LocalisedName":"9 Flüchtlinge will nach  ", "DestinationSystem":"LTT 9360", "DestinationStation":"Smeaton Orbital", "Expiry":"2017-11-07T13:52:20Z", "Influence":"High", "Reputation":"Low", "Reward":5674436, "PassengerCount":9, "PassengerVIPs":false, "PassengerWanted":false, "PassengerType":"Refugee", "MissionID":241744417 }
+                //{ "timestamp":"2017-10-12T11:46:06Z", "event":"MissionAccepted", "Faction":"Traditional Rhea Front", "Name":"Mission_PassengerVIP", "LocalisedName":"Transport Jordin Hinton", "Commodity":"$ConsumerTechnology_Name;", "Commodity_Localised":"Unterhaltungselektronik", "Count":3, "DestinationSystem":"LQ Hydrae", "DestinationStation":"Wohler Horizons", "Expiry":"2017-10-12T14:10:29Z", "Influence":"Med", "Reputation":"High", "Reward":452992, "PassengerCount":6, "PassengerVIPs":true, "PassengerWanted":false, "PassengerType":"Tourist", "MissionID":225273391 }
                 double id = json.MissionID;
                 mission ms = new mission();
-                if (json.IsDefined("Count") && json.Name != "Mission_Altruism")     //Cargo count but not for charity !!!! procure missions need to be adressed too
+                
+                ms.Faction = json.Faction;
+                ms.Name = json.Name;
+                ms.Reputation = json.Reputation;
+                ms.Influence = json.Influence;
+                ms.LocalisedName = json.LocalisedName;
+                if (json.IsDefined("Reward"))
                 {
-                    pl.Cargo += json["Count"];
+                    ms.Reward = json.Reward;
+                }
+                if (json.IsDefined("Commodity"))     //Cargo count 
+                {
+                    if(json.Name != "Mission_Altruism" && json.Name != "Mission_PassengerVIP")
+                    {
+                        pl.Cargo += json["Count"];
+                        ms.Type = "cargo";
+                    }
+                    ms.Commodity = json.Commodity;
                     ms.Count = (int)json["Count"];
-                    ms.Type = "cargo";
+                    ms.Commodity_Localised = json.Commodity_Localised;
                 }
                 if (json.IsDefined("PassengerCount"))
                 {
@@ -221,17 +246,20 @@ namespace EliteCMD
             }
             else if (json["event"] == "MissionCompleted")                           //Mission Completed
             {
+                //{ "timestamp":"2017-11-23T11:47:01Z", "event":"MissionCompleted", "Faction":"Partnership of HIP 67086", "Name":"Mission_AltruismCredits_name", "MissionID":250995436, "Donation":1000000 }
+                //{ "timestamp":"2017-11-07T13:14:10Z", "event":"MissionCompleted", "Faction":"Partnership of LTT 9315", "Name":"Mission_PassengerBulk_POLPRISONER_ARRIVING_name", "MissionID":241759887, "DestinationSystem":"LTT 9360", "DestinationStation":"Smeaton Orbital", "Reward":22094226 }
+                //{ "timestamp":"2017-11-23T11:59:19Z", "event":"MissionCompleted", "Faction":"Partnership of HIP 67086", "Name":"Chain_HelpFinishTheOrder_name", "MissionID":250997069, "Commodity":"$Explosives_Name;", "Commodity_Localised":"Sprengstoffe", "Count":3, "DestinationSystem":"Ochosi", "DestinationStation":"Perry's Folly", "Reward":564393 }
                 double id = json.MissionID;
-                if (json.IsDefined("Count")) //Cargo Mission
+                
+                if(pl.Missions.ContainsKey(id)) //Passenger Missions dont give Leaving passengers count
                 {
-                    pl.Cargo -= json["Count"];
-                }
-
-                if(pl.Missions.ContainsKey(id)) //Passenger Missions dont give Leaving passengers
-                {
-                    if(pl.Missions[id].Type == "passenger")
+                    if(pl.Missions[id].Type == "cargo")
                     {
                         pl.Passenger -= pl.Missions[id].Count;
+                    }
+                    else if(pl.Missions[id].Type == "passenger")
+                    {
+                        pl.Cargo -= json["Count"];
                     }
                     pl.Missions.Remove(id);
                 }
@@ -358,12 +386,29 @@ namespace EliteCMD
                     pl.Cargo -= json.Quantity;
                 }
             }
+            else if (json["event"] == "MissionFailed")                                 //Engineer Contribution
+            {
+                //{ "timestamp":"2017-11-06T10:55:43Z", "event":"MissionFailed", "Name":"Mission_PassengerBulk_REFUGEE_LEAVING_name", "MissionID":241111985 }
+                double id = json.MissionID;
+                if (pl.Missions.ContainsKey(id)) //Passenger Missions dont give Leaving passengers
+                {
+                    if (pl.Docked == "docked")
+                    {
+                        pl.Passenger -= pl.Missions[id].Count;
+                    }
+                    pl.Missions.Remove(id);
+                }
+            }
 
+
+            //{ "timestamp":"2017-11-06T10:55:54Z", "event":"PayFines", "Amount":500 }
+            //{ "timestamp":"2017-11-06T10:56:03Z", "event":"RedeemVoucher", "Type":"bounty", "Amount":179564, "Factions":[ { "Faction":"", "Amount":281 }, { "Faction":"", "Amount":59841 }, { "Faction":"", "Amount":60138 }, { "Faction":"", "Amount":59304 } ], "BrokerPercentage":25.000000 }
             //{ "timestamp":"2017-11-29T18:32:41Z", "event":"ModuleRetrieve", "Slot":"Slot02_Size5", "RetrievedItem":"$int_fueltank_size5_class3_name;", "RetrievedItem_Localised":"Treibstofftank", "Ship":"asp", "ShipID":5 }
             //{ "timestamp":"2017-11-29T15:56:53Z", "event":"Materials", "Raw":[ { "Name":"selenium", "Count":15 }, { "Name":"manganese", "Count":19 }, { "Name":"nickel", "Count":27 }, { "Name":"sulphur", "Count":23 }, { "Name":"iron", "Count":28 }, { "Name":"ruthenium", "Count":3 }, { "Name":"carbon", "Count":24 }, { "Name":"phosphorus", "Count":15 }, { "Name":"cadmium", "Count":5 }, { "Name":"zirconium", "Count":3 }, { "Name":"zinc", "Count":6 }, { "Name":"chromium", "Count":17 } ], "Manufactured":[ { "Name":"mechanicalcomponents", "Count":12 }, { "Name":"configurablecomponents", "Count":6 }, { "Name":"heatexchangers", "Count":2 }, { "Name":"mechanicalscrap", "Count":14 }, { "Name":"refinedfocuscrystals", "Count":16 }, { "Name":"phasealloys", "Count":18 }, { "Name":"highdensitycomposites", "Count":18 }, { "Name":"hybridcapacitors", "Count":3 }, { "Name":"wornshieldemitters", "Count":12 }, { "Name":"focuscrystals", "Count":8 }, { "Name":"shieldingsensors", "Count":9 }, { "Name":"salvagedalloys", "Count":19 }, { "Name":"shieldemitters", "Count":15 }, { "Name":"mechanicalequipment", "Count":14 }, { "Name":"gridresistors", "Count":4 }, { "Name":"galvanisingalloys", "Count":9 }, { "Name":"precipitatedalloys", "Count":7 }, { "Name":"protolightalloys", "Count":6 }, { "Name":"chemicalprocessors", "Count":7 }, { "Name":"militarysupercapacitors", "Count":27 }, { "Name":"fedcorecomposites", "Count":9 }, { "Name":"fedproprietarycomposites", "Count":18 }, { "Name":"compoundshielding", "Count":6 }, { "Name":"biotechconductors", "Count":45 }, { "Name":"thermicalloys", "Count":2 }, { "Name":"heatconductionwiring", "Count":1 }, { "Name":"conductivecomponents", "Count":6 }, { "Name":"heatvanes", "Count":3 }, { "Name":"conductivepolymers", "Count":8 }, { "Name":"exquisitefocuscrystals", "Count":26 } ], "Encoded":[ { "Name":"decodedemissiondata", "Count":32 }, { "Name":"emissiondata", "Count":40 }, { "Name":"disruptedwakeechoes", "Count":12 }, { "Name":"scrambledemissiondata", "Count":5 }, { "Name":"fsdtelemetry", "Count":6 }, { "Name":"scandatabanks", "Count":19 }, { "Name":"legacyfirmware", "Count":10 }, { "Name":"bulkscandata", "Count":39 }, { "Name":"shielddensityreports", "Count":40 }, { "Name":"encryptedfiles", "Count":3 }, { "Name":"shieldpatternanalysis", "Count":40 }, { "Name":"consumerfirmware", "Count":9 }, { "Name":"embeddedfirmware", "Count":26 }, { "Name":"shieldcyclerecordings", "Count":40 }, { "Name":"industrialfirmware", "Count":10 }, { "Name":"shieldsoakanalysis", "Count":40 }, { "Name":"scanarchives", "Count":6 }, { "Name":"encryptionarchives", "Count":3 }, { "Name":"classifiedscandata", "Count":3 }, { "Name":"encodedscandata", "Count":3 } ] }
             //{ "timestamp":"2017-11-29T15:58:45Z", "event":"EngineerProgress", "Engineer":"Tod 'The Blaster' McQuinn", "Rank":4 }
             //{ "timestamp":"2017-11-29T15:56:53Z", "event":"Rank", "Combat":4, "Trade":8, "Explore":5, "Empire":2, "Federation":12, "CQC":0 }
             //{ "timestamp":"2017-11-29T15:56:53Z", "event":"Progress", "Combat":11, "Trade":100, "Explore":5, "Empire":39, "Federation":3, "CQC":0 }
+            //{ "timestamp":"2017-11-07T13:14:18Z", "event":"MaterialCollected", "Category":"Manufactured", "Name":"biotechconductors", "Count":1 }
 
             return pl.Changed; 
         }
