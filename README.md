@@ -1,4 +1,4 @@
-﻿# EliteCMD
+# EliteCMD
 probably completely useles to annyone but me.<br /><br />
 
 Interface written in C# with WPF for reading the logfile written by EliteDangerous<br />
