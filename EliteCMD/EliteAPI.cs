@@ -255,11 +255,11 @@ namespace EliteCMD
                 {
                     if(pl.Missions[id].Type == "cargo")
                     {
-                        pl.Passenger -= pl.Missions[id].Count;
+                        pl.Cargo -= pl.Missions[id].Count;
                     }
                     else if(pl.Missions[id].Type == "passenger")
                     {
-                        pl.Cargo -= json["Count"];
+                        pl.Passenger -= pl.Missions[id].Count;
                     }
                     pl.Missions.Remove(id);
                 }

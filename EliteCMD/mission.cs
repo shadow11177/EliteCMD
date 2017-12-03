@@ -19,7 +19,7 @@ namespace EliteCMD
         private string commodity_Localised = "";
         private string influence = "";
         private string reputation = "";
-        private string reward = "";
+        private double reward = 0;
 
 
         public int Count { get => count; set => count = value; }
@@ -33,7 +33,7 @@ namespace EliteCMD
         public string Commodity_Localised { get => commodity_Localised; set => commodity_Localised = value; }
         public string Influence { get => influence; set => influence = value; }
         public string Reputation { get => reputation; set => reputation = value; }
-        public string Reward { get => reward; set => reward = value; }
+        public double Reward { get => reward; set => reward = value; }
 
         public mission()
         {
