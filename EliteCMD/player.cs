@@ -9,6 +9,10 @@ namespace EliteCMD
 {
     public class player
     {
+
+        public delegate void missionEventHandler(object sender, missionEventArgs e);
+        public event missionEventHandler OnMissionEvent;
+
         Timer MissionCountdown = new Timer();
         private bool changed = false;
         private string station = "";
@@ -24,6 +28,7 @@ namespace EliteCMD
         private int passengerCabbin = 0;
         private int passenger = 0;
         public Dictionary<double, mission> Missions = new Dictionary<double, mission>();
+        public Dictionary<double, mission> ElapsingMissions = new Dictionary<double, mission>();
         private Dictionary<string, string> Ships = new Dictionary<string, string>();
 
         public string Station
@@ -293,8 +298,21 @@ namespace EliteCMD
 
         private void MissionCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Dictionary<double, mission> elapsing = Missions.Where(s => s.Value.Expiry < DateTime.Now.AddMinutes(-5)).ToDictionary(s => s.Key ,s => s.Value);
+            Dictionary<double, mission> oldM = ElapsingMissions;
+            ElapsingMissions = Missions.Where(s => s.Value.Expiry < DateTime.Now.AddMinutes(-5)).ToDictionary(s => s.Key ,s => s.Value);
+            if(oldM != ElapsingMissions)
+            {
+                MissionEvent(ElapsingMissions);
+            }
+        }
+        
+        public void MissionEvent(Dictionary<double, mission> em)
+        {
+            // Make sure someone is listening to event
+            if (OnMissionEvent == null) return;
 
+            missionEventArgs args = new missionEventArgs(em);
+            OnMissionEvent(this, args);
         }
     }
 }

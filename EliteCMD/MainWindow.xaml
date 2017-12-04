@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EliteCMD"
         mc:Ignorable="d"
-        Title="EliteCMD" Height="340.354" Width="242.207" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="EliteCMD" Height="340.354" Width="507.827" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -20,7 +20,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition MaxWidth="80"/>
+            <ColumnDefinition MaxWidth="150"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label x:Name="label" Content="Station:" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -43,6 +44,7 @@
         <Label x:Name="lblPassengers" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="7" VerticalAlignment="Center" Margin="0"/>
         <Label x:Name="label4_Copy3" Content="GameMode:" HorizontalAlignment="Right" Grid.Row="8" VerticalAlignment="Center" Margin="0,0.5"/>
         <Label x:Name="lblGameMode" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Grid.Row="8" VerticalAlignment="Center" Margin="0,0.5"/>
+        <ListBox x:Name="lstElapsingMissions" Grid.Column="2" Grid.RowSpan="10"/>
 
     </Grid>
 </Window>

@@ -12,9 +12,11 @@ namespace EliteCMD
 {
     class EliteAPI
     {
-
         public delegate void apiEventHandler(object sender, apiEventArgs e);
         public event apiEventHandler OnApiEvent;
+
+        public delegate void missionEventHandler(object sender, missionEventArgs e);
+        public event missionEventHandler OnMissionEvent;
 
         Thread wrk;
 
@@ -32,7 +34,12 @@ namespace EliteCMD
 
         public EliteAPI()
         {
-            
+            pl.OnMissionEvent += Pl_OnMissionEvent;
+        }
+
+        private void Pl_OnMissionEvent(object sender, missionEventArgs e)
+        {
+            MissionEvent(e.ElapsingMissions);
         }
 
         public void Run()
@@ -103,6 +110,15 @@ namespace EliteCMD
 
             apiEventArgs args = new apiEventArgs(pl);
             OnApiEvent(this, args);
+        }
+
+        public void MissionEvent(Dictionary<double, mission> em)
+        {
+            // Make sure someone is listening to event
+            if (OnMissionEvent == null) return;
+
+            missionEventArgs args = new missionEventArgs(em);
+            OnMissionEvent(this, args);
         }
 
         private bool parseLine(string Line)
@@ -415,15 +431,23 @@ namespace EliteCMD
         }
     }
 
-    
-    
     public class apiEventArgs : EventArgs
     {
-        public player Player { get; private set; } 
+        public player Player { get; private set; }
 
         public apiEventArgs(player pl)
         {
             Player = pl;
+        }
+    }
+
+    public class missionEventArgs : EventArgs
+    {
+        public Dictionary<double, mission> ElapsingMissions { get; private set; }
+
+        public missionEventArgs(Dictionary<double, mission> em)
+        {
+            ElapsingMissions = em;
         }
     }
 }

@@ -39,10 +39,23 @@ namespace EliteCMD
             foreach (string Port in SerialPort.GetPortNames())
                 cboPort.Items.Add(Port);
             EA.OnApiEvent += EA_OnApiEvent;
+            EA.OnMissionEvent += EA_OnMissionEvent;
             EA.Run();
         }
-        
-        
+
+        private void EA_OnMissionEvent(object sender, missionEventArgs e)
+        {
+            this.Dispatcher.Invoke(delegate
+            {
+
+                lstElapsingMissions.Items.Clear();
+                foreach (double id in e.ElapsingMissions.Keys)
+                {
+                    lstElapsingMissions.Items.Add(e.ElapsingMissions[id].Expiry.ToShortTimeString() + " - " + e.ElapsingMissions[id].LocalisedName);
+                }
+            });
+        }
+
         private void EA_OnApiEvent(object sender, apiEventArgs e)
         {
             /*
@@ -72,6 +85,8 @@ namespace EliteCMD
             lblCargo.Content = cargo;
             string pass = pla.Passenger + "/" + pla.PassengerCabbin;
             lblPassengers.Content = pass;
+
+
             if (COM.IsOpen)
             {
                 string line = "";
