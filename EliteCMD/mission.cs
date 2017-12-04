@@ -20,6 +20,7 @@ namespace EliteCMD
         private string influence = "";
         private string reputation = "";
         private double reward = 0;
+        private DateTime expiry = new DateTime();
 
 
         public int Count { get => count; set => count = value; }
@@ -34,6 +35,7 @@ namespace EliteCMD
         public string Influence { get => influence; set => influence = value; }
         public string Reputation { get => reputation; set => reputation = value; }
         public double Reward { get => reward; set => reward = value; }
+        public DateTime Expiry { get => expiry; set => expiry = value; }
 
         public mission()
         {

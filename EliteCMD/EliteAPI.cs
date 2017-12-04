@@ -213,6 +213,7 @@ namespace EliteCMD
                 ms.Reputation = json.Reputation;
                 ms.Influence = json.Influence;
                 ms.LocalisedName = json.LocalisedName;
+                ms.Expiry = Convert.ToDateTime(json.Expiry);
                 if (json.IsDefined("Reward"))
                 {
                     ms.Reward = json.Reward;

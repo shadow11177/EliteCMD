@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace EliteCMD
 {
     public class player
     {
+        Timer MissionCountdown = new Timer();
         private bool changed = false;
         private string station = "";
         private string starSystem = "";
@@ -282,6 +284,17 @@ namespace EliteCMD
 
             //GameMode name correction??
             //Track correction??
+            MissionCountdown.AutoReset = true;
+            MissionCountdown.Interval = 1000;
+            MissionCountdown.Enabled = true;
+            MissionCountdown.Elapsed += MissionCountdown_Elapsed;
+            MissionCountdown.Start();
+        }
+
+        private void MissionCountdown_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Dictionary<double, mission> elapsing = Missions.Where(s => s.Value.Expiry < DateTime.Now.AddMinutes(-5)).ToDictionary(s => s.Key ,s => s.Value);
+
         }
     }
 }
