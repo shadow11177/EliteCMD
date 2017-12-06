@@ -45,15 +45,30 @@ namespace EliteCMD
 
         private void EA_OnMissionEvent(object sender, missionEventArgs e)
         {
-            this.Dispatcher.Invoke(delegate
+            try
             {
-
-                lstElapsingMissions.Items.Clear();
-                foreach (double id in e.ElapsingMissions.Keys)
+                this.Dispatcher.Invoke(delegate
                 {
-                    lstElapsingMissions.Items.Add(e.ElapsingMissions[id].Expiry.ToShortTimeString() + " - " + e.ElapsingMissions[id].LocalisedName);
-                }
-            });
+
+                    lstElapsingMissions.Items.Clear();
+                    foreach (double id in e.ElapsingMissions.Keys)
+                    {
+                        TimeSpan ts = e.ElapsingMissions[id].Expiry - DateTime.Now;
+                        bool negative = false;
+                        if (ts.TotalSeconds < 0)
+                        {
+                            negative = true;
+                            ts = ts.Negate();
+                        }
+                            
+                        string formRemaining = (negative ? "-" : "") + (ts.Days > 0 ? ts.Days + ":" : "") + (ts.Hours > 0 || ts.Days > 0 ? ts.Hours.ToString().PadLeft(2, '0') + ":" : "") + ts.Minutes.ToString().PadLeft(2,'0') + ":" + ts.Seconds.ToString().PadLeft(2, '0');
+                        lstElapsingMissions.Items.Add(formRemaining + " - " + e.ElapsingMissions[id].LocalisedName + " - " + e.ElapsingMissions[id].DestSys + " - " + e.ElapsingMissions[id].DestStat);
+                    }
+                });
+            }
+            catch
+            { }
+            
         }
 
         private void EA_OnApiEvent(object sender, apiEventArgs e)

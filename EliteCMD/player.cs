@@ -298,9 +298,9 @@ namespace EliteCMD
 
         private void MissionCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Dictionary<double, mission> oldM = ElapsingMissions;
-            ElapsingMissions = Missions.Where(s => s.Value.Expiry < DateTime.Now.AddMinutes(-5)).ToDictionary(s => s.Key ,s => s.Value);
-            if(oldM != ElapsingMissions)
+            int ex = ElapsingMissions.Keys.Count();
+            ElapsingMissions = Missions.Where(s => s.Value.Expiry < DateTime.Now.AddMinutes(-5)).OrderBy(s => s.Value.Expiry).ToDictionary(s => s.Key ,s => s.Value);
+            if(ElapsingMissions.Keys.Count() > 0 || ex > 0)
             {
                 MissionEvent(ElapsingMissions);
             }
